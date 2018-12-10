@@ -1,0 +1,19 @@
+<0.9.10.92.09.10.59.tmeadows@resumix.portal.com (Tim Meadows).0>
+Type:     cmu.cs.robotics
+Topic:    Antarctic Exploration Robotics
+Dates:    9-Oct-92
+Time:     <stime>3:30</stime> - <etime>5:00 PM</etime>
+Place:    <location>Baker Hall Adamson Wing</location>
+PostedBy: tmeadows on 9-Oct-92 at 09:10 from resumix.portal.com (Tim Meadows)
+Abstract:
+ 
+RI SEMINAR
+ WHEN:		Friday, October 9, 1992, <stime>3:30</stime> - <etime>5:00 PM</etime>
+<paragraph>	Refreshments to be served by <stime>3:15 PM</stime></paragraph>
+
+ WHERE:		<location>Baker Hall Adamson Wing</location>
+ SPREAKER:		<speaker>Dr. William</speaker> "Red" L. Whittaker-
+		Principal Scientist and Director, 
+		The Field Robotics Center- CMU
+ TITLE:		Antarctic Exploration Robotics
+ 

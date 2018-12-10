@@ -1,28 +1,35 @@
 import re
 from os import listdir
 from os.path import isfile, join
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk import pos_tag
 
 contentMap  = {}
 headerMap   = {}
 infoMap     = {}
 textMap     = {}
-taggedMap   = {}
+
+locationMap = {}
+stimeMap = {}
+etimeMap = {}
+speakerMap = {}
 
 locations = []
-TIME_ROW_REGEX = r'(time|when):'
-PLACE_ROW_REGEX = r'(where|place|location):'
-SPEAKER_ROW_REGEX = r'(who|by|speaker|name):'
+speakers = []
+
+TIME_ROW_REGEX = r'((time)|(when)):'
+PLACE_ROW_REGEX = r'((where)|(place)|(location)):'
+SPEAKER_ROW_REGEX = r'((who)|(speaker)|(name)):'
 INFO_REGEX = r'\w:'
 time_regex = r'\b(?<!>)((0?[1-9]|1[012])([:][0-5][0-9])?(\s?[apAP]\.?[Mm])|([01]?[0-9]|2[0-3])([:][0-5][0-9]))\b'
+speaker_regex = r'((M[Rr])|(M[Ss])|(M[RrSs])|(D[rR])|(P[RrOoFf])|(Professor))(\.)? '
 
-punctuation = ['\.', '?', '!']
-separator = 'Abstract:\n'
-pers_title = ['Mr', 'Mr.', 'Mrs', 'Mrs.', 'Ms', 'Ms.', 'Dr', 'Dr.', 'DR', 'DR.', 'Professor', 'Prof', 'Prof.']
+punctuation = ['\.\?\!']
+separator = 'Abstract:'
 
 
 def get_training_data():
-    directories = ['test_tagged', 'training']
+    directories = ['training']
 
     for directory in directories:
         files = [f for f in listdir(directory) if isfile(join(directory, f))]
@@ -35,16 +42,17 @@ def get_training_data():
                 input = file.read()
                 location_match = re.search('<location>(.*)</location>', input)
                 if location_match is not None:
-                    location = location_match.group(1).strip(' ')
+                    location = location_match.group(1).strip()
                     location = re.sub(r'<.*>', '', location)
                     if location not in locations:
                         locations.append(location)
                     pfile.write(location + '\n')
                 speaker_match = re.search('<speaker>(.*)</speaker', input)
                 if speaker_match is not None:
-                    speaker = speaker_match.group(1).strip(' ')
+                    speaker = speaker_match.group(1).strip()
                     sfile.write(re.sub(r'<.*>', '', speaker) + '\n')
-
+                    if speaker not in speakers:
+                        speakers.append(speaker)
         sfile.close()
         pfile.close()
 
@@ -58,189 +66,173 @@ def read_files():
     for f in only_files:
         path = my_path + f
         with open(path, 'r') as file:
-            headerMap[path], infoMap[path], textMap[path] = split_in_parts(file.read())
+            contentMap[path] = file.read()
+        
+        tmp = contentMap[path].split(separator)
+        headerMap[path] = tmp[0]
+        if len(tmp) > 1:
+            textMap[path] = tmp[1]
+        else:
+            textMap[path] = ''
 
         # Get relevant information
-        info = get_info(path)
-        stime = str(info[0])
-        etime = str(info[1])
-        location = str(info[2])
-        speaker = str(info[3])
-        tag_info(path, stime, etime, location, speaker) 
+            # stime, etime, location, speaker = get_info(path)
+            # tag_info(path, stime, etime, location, speaker) 
+
+        if path in list(textMap.keys()):
+            textMap[path] = tag_parag_and_sent(path)
+        else:
+            textMap[path] = ''
+        contentMap[path] = headerMap[path] + separator + '\n' + textMap[path]
+        
+        tag_speaker(path)
+        tag_location(path)
+        tag_time(path)
 
         # Create files and print the results
         file = open(result_path + f, 'w')
-        new_content = headerMap[path] + separator + '\n' + infoMap[path] + tag_parag(tag_sent(textMap[path]))
-        file.write(new_content)
+        file.write(contentMap[path])
         file.close()
 
 
-# Go through the email and tag the known data from the header
-def tag_info(path, stime, etime, location, speaker):
-    if stime != '':
-        infoMap[path].replace(stime, '<stime>' + stime + '</stime>')
-        textMap[path].replace(stime, '<stime>' + stime + '</stime>')
-        if (etime != ''):
-            infoMap[path].replace(etime, '<etime>' + etime + '</etime>')
-            textMap[path].replace(etime, '<etime>' + etime + '</etime>')
-        else:
-            infoMap[path] = tag_time(infoMap[path])
-            textMap[path] = tag_time(textMap[path])
-    if speaker != '':
-        infoMap[path].replace(speaker, '<speaker>' + speaker + '</speaker>')
-        textMap[path].replace(speaker, '<stime>' + speaker + '</speaker>')
-    if location != '':
-        infoMap[path].replace(location, '<location>' + location + '</location>')
-        textMap[path].replace(stime, '<location>' + location + '</location>')
-    else:
-        infoMap[path] = tag_location(infoMap[path])
-        textMap[path] = tag_location(textMap[path])
+def is_parag(block):
+    check = False
+    tokens = word_tokenize(block)
+    for token, pos in pos_tag(tokens):
+        if pos[0] == 'V':
+            check = True
+            break
+        if "." in token:
+            return False
+    if len(tokens) > 0 and not tokens[0][0].isupper():
+        check = False
+    return check
 
 
-# Split an email into the actual text and the information lines
-def split_in_parts(contents):
-    split_content = contents.split(separator)
-    info = ''
-    text = ''
-    if len(split_content) > 1:
-        blocks = split_content[1].split('\n')
-        for block in blocks:
-            if re.match(r'\s', block) is None:
-                #print('=============' + block + '' + '=============' + str(is_info(block)))
-                if (not (info == '' and text != '')) and (is_info(block.lstrip(' ')) or not any(p not in block for p in punctuation)):
-                    info += block + '\n'
-                else:
-                    text += block + '\n'
-    return split_content[0], info, text
-
-
-# This function returns true if the line i
-def is_info(line):
-    if re.match(INFO_REGEX, line) is not None:
-        return True
-    return False
-
-
-# Retrieve the relevant information from the header
-def get_info(path):
-    lines = (headerMap[path] + '\n' + infoMap[path]).split('\n')
-
-    time_row = ''
-    place_row = ''
-    speaker_row = ''
-    start_time = ''
-    end_time = ''
-    speaker = ''
-    location = ''
-
-    for line in lines:
-        if re.match(TIME_ROW_REGEX, line.lower()) is not None:
-            time_row = line
-        elif re.match(PLACE_ROW_REGEX, line.lower()) is not None:
-            place_row = line
-        elif re.match(SPEAKER_ROW_REGEX, line.lower()) is not None:
-            speaker_row = line
-
-    # Tag the time
-    if time_row != '':
-        times = re.findall(time_regex, time_row)
-        start_time = times[0]
-        headerMap[path].replace(start_time, '<stime>' + start_time + '</stime>')
-        if (len(times) > 1):
-            end_time = times[1]
-            headerMap[path].replace(end_time, '<etime>' + end_time + '</etime>')
-
-    # Tag the location and add it to the list
-    if place_row != '':
-        location = text[text.find(':'):].strip('\s\t')
-    
-    # Tag the speaker, if they are specified in the header
-    if speaker_row != '':
-        speaker = text[text.find(':'):].strip('\s\t')
-
-    return start_time, end_time, location, speaker
-
-
-# Tag the sentences of a text
-def tag_sent(text):
-    sentences = sent_tokenize(text)
+def tag_parag_and_sent(path):
+    blocks = re.split(r'\n\s', textMap[path])
     new_content = ''
-    for sent in sentences:
-        # The built-in sentence tokenizer is not always accurate, so it needs additional validation
-        if sent[-1] in '\.?:!\n':
-            if not sent[0].isalnum():
-                real_sent = re.search(r'\n\w', sent)
-                if real_sent is not None:
-                    new_content += sent[:real_sent.span()[0]]
-                    sent = sent[real_sent.span()[0]:]
-            new_content += '<sentence>' + sent[:-1] + '</sentence>' + sent[-1]
-    return new_content
-
-
-# Tag paragraphs, based on the fact that they are supposed to start with a sentence
-# and have an empty line before them
-def tag_parag(text):
-    paragraphs = text.split('\n\n')
-    text = paragraphs[0]
-    for paragraph in paragraphs:
-        if re.match(r'<sentence>', paragraph):
-            text += '<paragraph><sentence>' + paragraph + '</paragraph>\n\n'
+    for block in blocks:
+        if (is_parag(block)):
+            sents = sent_tokenize(block)
+            new_block = ''
+            for i in range(len(sents)):
+                sents[i] = sents[i]
+                if sents[i][0].isupper() and sents[i][0].isalpha():
+                    if sents[i][-1] in '.:':
+                        sents[i] = '<sentence>' + sents[i][:-1] + '</sentence>' + sents[i][-1]
+                    else:
+                        sents[i] = '<sentence>' + sents[i] + '</sentence>'
+            new_block = '<paragraph>' + ' '.join(sents) + '</paragraph>' + '\n\n'
+            #print(new_block + '\n================ ' + str(block in contentMap[path]) + ' ============')
+            new_content = ''.join([new_content, new_block])
+            #contentMap[path].replace(block, new_block)
+            #print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n' + contentMap[path] + '\n')
         else:
-            text += paragraph + '\n\n'
-    return text
+            new_content = new_content + block + '\r\n'
+    return new_content
+            
+
+def tag_speaker(path):
+    match = re.search(SPEAKER_ROW_REGEX, contentMap[path].lower())
+    if match is not None:
+        speaker_row = contentMap[path][match.span()[0]:].split('\n')[0]
+        speaker = re.split(r',|\-|( [a-z])|\(|/', speaker_row[(speaker_row.find(':') + 1):])[0].strip()
+        contentMap[path] = contentMap[path].replace(speaker, '<speaker>' + speaker + '</speaker>')
+        speakers.append(speaker)
+    else:
+        match = re.search(speaker_regex, contentMap[path])
+        if match is not None:
+            title = match.group(0)
+            name_start = match.span()[1]
+            name = ''
+            words = re.split(r' |,|:|\'', contentMap[path][name_start:], 5)
+            for i in range(len(words) - 1):
+                if len(words[i]) > 0 and words[i][0].isalpha() and words[i][0].isupper():
+                    name =  name + words[i] + ' '
+                    if words[i][-1] == '.' and len(words[i]) > 3:
+                        break
+                else:
+                    break
+            speaker = (title + name).split('\n')[0].strip()
+            if (len(speaker.split()) > 1):
+                contentMap[path] = contentMap[path].replace(speaker, '<speaker>' + speaker + '</speaker>')
+                speakers.append(speaker)
+        else:
+            found = []
+            for speaker in speakers:
+                if speaker in contentMap[path]:
+                    found.append(speaker)
+            for idx in range(len(found) - 1):
+                for i in range(idx + 1, len(found)):
+                    if found[idx] in found[i]:
+                        found.remove(found[i])
+                        i = i - 1
+            for speaker in found:
+                contentMap[path] = contentMap[path].replace(speaker, '<speaker>' + speaker + '</speaker>')
 
 
 # Tag the location based on the training data offering examples
-def tag_location(text):
-    found = []
-    for location in locations:
-        if location in text:
-            found.append(location)
-    for idx in range(len(found) - 1):
-        for i in range(idx + 1, len(found)):
-            if found[idx] in found[i]:
-                found.remove(found[i])
-                i = i - 1
-    for location in found:
-        text = text.replace(location, '<location>' + location + '</location>')
-    return text
+def tag_location(path):
+    match = re.search(PLACE_ROW_REGEX, contentMap[path].lower())
+    if match is not None:
+        location_row = contentMap[path][match.span()[0]:].split('\n')[0]
+        location = location_row[(location_row.find(':') + 1):].strip()
+        locations.append(location)
+        contentMap[path] = contentMap[path].replace(location, '<location>' + location + '</location>')
+    else:
+        found = []
+        for location in locations:
+            if location in contentMap[path]:
+                found.append(location)
+        found2 = found
+        doubles = []
+        for location in found:
+            for location2 in found2:
+                if location in location2 and location != location2:
+                    doubles.append(location)
+        for location in doubles:
+            if location in found:
+                found.remove(location)
+        for location in found:
+            contentMap[path] = contentMap[path].replace(location, '<location>' + location + '</location>')
 
 
-def tag_time(text):
-    new_text = text
+def tag_time(path):
+    new_text = contentMap[path]
     tags_length = len('<stime></stime>')
     current = 0
 
     while current < len(new_text):
-        occurance = re.search(time_regex, new_text[current:])
-        if occurance is not None:
-            start_index = occurance.span()[0]
-            end_index = occurance.span()[1]
+        match = re.search(time_regex, new_text[current:])
+        if match is not None:
+            start_index = match.span()[0]
+            end_index = match.span()[1]
+            time = match.group(1)
             if start_index < 6:
                 part1 = new_text[:(current + start_index)] + '<etime>'
                 part2 = '</etime>' + new_text[(end_index + current):]
                 new_text = part1 + new_text[(current + start_index):(current + end_index)] + part2
             else:
-                part1 = new_text[:(current + start_index)] + '<stime>'
-                part2 = '</stime>' + new_text[(end_index + current):]
-                new_text = part1 + new_text[(current + start_index):(current + end_index)] + part2
-            current += end_index + 1 + tags_length
+                postedby = re.search('PostedBy:(.*)\n', headerMap[path])
+                if postedby is not None:
+                    print(path + ' ' + str(time in postedby.group(1)))
+                if postedby is None or time not in postedby.group(1): 
+                    part1 = new_text[:(current + start_index)] + '<stime>'
+                    part2 = '</stime>' + new_text[(end_index + current):]
+                    new_text = part1 + new_text[(current + start_index):(current + end_index)] + part2
+            current += end_index + tags_length
         else:
             break
-
-    return new_text
+    contentMap[path] = new_text
 
 
 if __name__ == '__main__':
 
     get_training_data()
+    #path = 'untagged/301.txt'
     read_files()
-    #path = 'test_untagged/347.txt'
-    #with open(path, 'r') as file:
-     #   contents = file.read()
-    #header, info, text = split_in_parts(contents)
-    #print(tag_sent(text))
-    #new_content = tag_header(header) + separator + tag_parag(tag_location(tag_time(info + (tag_sent(text)))))
-    # print(new_content)
-
-
+    #with open('untagged/301.txt', 'r') as f:
+     #   contentMap[path] = f.read()
+    #print(contentMap[path])
+    

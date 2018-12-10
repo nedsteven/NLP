@@ -1,0 +1,45 @@
+<0.20.5.93.15.51.47.sbk+@cs.cmu.edu (Sing Bing Kang).0>
+Type:     cmu.cs.robotics
+Who:      <speaker>Peter Eggleston</speaker>, Amerinex Artificial Intelligence, Inc.
+Topic:    Talk on object segmentation techniques and constraint based feature indexing
+Dates:    25-May-93
+Time:     <stime>3:00 PM</stime>
+Place:    <location>WeH4623</location>
+Duration: 75 mins.
+Host:     Sing Bing Kang (sbk@cs)
+PostedBy: sbk+ on 20-May-93 at 15:51 from cs.cmu.edu (Sing Bing Kang)
+Abstract:
+ 
+ Date:		25-May-93, Tuesday
+Time:		<stime>3:00pm</stime>
+Place:		<location>WeH4623</location>
+Duration:	75 mins.
+Who:		<speaker>Peter Eggleston</speaker>, Amerinex Artificial Intelligence, Inc.
+Topics:		Object Segmentation Techniques for use in Visual Automation
+		and
+<paragraph>		Constraint Based Feature Indexing and Retrieval for Image</paragraph>
+
+		Databases
+Host:		Sing Bing Kang (sbk@cs)
+Topic 1: Object Segmentation Techniques for use in Visual Automation
+<paragraph>    In designing automated systems for interpretation or manipulation of</paragraph>
+
+   laboratory image data such as that derived from microphotographs, it is
+   often the goal to perform operations that extract information about the
+   structure of objects, and to separate and discern various objects within
+   the data. Given a transformation of the pixel based image data into an
+   explicit symbolic representation of the objects (i.e., the creation of
+   objects of interest or Tokens), desired information can be extracted and
+   characterized from the visual data. Simple segmentation schemes often lack
+   the sophistication to deal with intricate or very subtle details of this
+   image data. This paper will discuss advanced techniques useful in
+   obtaining information relevant to the recognition and extraction of
+   objects of interest in laboratory vision automation applications.
+<paragraph><sentence>Topic 2: Constraint Based Feature Indexing and Retrieval for Image Databases</sentence></paragraph>
+
+<paragraph>              Advance presentation of paper being presented at the</paragraph>
+
+                     AFCEA/ITEMS '93 conference, Document
+<paragraph>                        Processing Applications Track.</paragraph>
+
+ 
