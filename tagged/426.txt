@@ -8,7 +8,7 @@ Abstract:
  
 Wednesday, January 26
 <stime>3:30</stime>-5
-<location><location><location>WeH 5409</location></location></location>
+<location>WeH 5409</location>
          The Role of Visual Fidelity in Instructional Simulations
                                <speaker>Michael Christel</speaker>
                               mac@sei.cmu.edu

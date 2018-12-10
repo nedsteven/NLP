@@ -14,7 +14,7 @@ Mike Eisenberg
 Department of Computer Science and Institute of Cognitive Science
 University of Colorado, Boulder
 <paragraph><sentence>Wednesday, March 23
-<location><location>Wean Hall 5409</location></location>
+<location>Wean Hall 5409</location>
 <stime>3:30</stime>-<etime>5pm</etime> 
 Programmable applications are software systems that combine the
 learnability and accessibility of direct manipulation interfaces with

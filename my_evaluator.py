@@ -34,11 +34,7 @@ def get_values(tagged, test, file, tag):
 
     fp = len(tagged)
     fn = len(test)
-    if fp > 0 or fn > 0:
-        print('In file ' + file + ' on tag ' + tag)
-        print(tagged)
-        print(test)
-        print()
+    
     return tp, fp, fn
 
 
@@ -57,7 +53,6 @@ def get_contents(file):
 
 
 def get_tokens(tagged_content, test_content, tag):
-
     tagged_tokens = []
     test_tokens = []
 

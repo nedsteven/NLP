@@ -10,7 +10,7 @@ Abstract:
 NOTE:  DIFFERENT DAY AND TIME!!
 Raj Reddy
 <stime>3:30</stime> Friday, May 5
-<location><location><location><location>Wean Hall 5409</location></location></location></location>
+<location>Wean Hall 5409</location>
 "Some Necessary Conditions for a Good User Interface"
 <paragraph><sentence>For our final Human-Computer Interaction seminar of the semester, Raj Reddy
 will be presenting his thoughts on what makes a good interface good</sentence>. <sentence>He

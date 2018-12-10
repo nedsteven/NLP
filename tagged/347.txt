@@ -11,7 +11,7 @@ Abstract:
 			Professor of Civil Engineering
 			University of Illinois at Urbana-Champagne
  Date:			Friday, March 20th
-Seminar time:		<stime>3:30</stime>-<etime>4:30</etime>, <location><location><location><location>Adamson Wing, Baker Hall</location></location></location></location>
+Seminar time:		<stime>3:30</stime>-<etime>4:30</etime>, <location>Adamson Wing, Baker Hall</location>
 		(Refreshments served at <stime>3:15</stime>)
 Some of the fundamental problems associated with the use of computer vision
 systems for fully automated geometric measurements will be discussed,

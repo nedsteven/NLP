@@ -9,7 +9,7 @@ Abstract:
 INTEL DISTINGUISHED LECTURE IN TECHNOLOGY:
 <paragraph><sentence>THE FUTURE OF COMPUTING
 Monday, November 2, 1992
-<location><location><location><location><location>Adamson Wing, Baker Hall</location></location></location></location></location> -- <stime>3:30 pm</stime>
+<location>Adamson Wing, Baker Hall</location> -- <stime>3:30 pm</stime>
 Reception will follow immediately after the talk</sentence>. ************************************************************************</paragraph>
 
 David L. House is Senior Vice President of Corporate Strategy.  As

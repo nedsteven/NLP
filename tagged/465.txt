@@ -11,7 +11,7 @@ Abstract:
 
      Complementarity Formulations of Multi-rigid-body Contact Problems
                         Friday, June 16 at <stime>3:00pm</stime>
-                              <location><location><location><location>Wean Hall 5409</location></location></location></location>
+                              <location>Wean Hall 5409</location>
                                Jeff Trinkle
                         Dept. of Computer Science
                            Texas A&M University

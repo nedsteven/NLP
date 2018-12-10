@@ -14,7 +14,7 @@ March 25
 James McWilliams
 National Center for Atmospheric Research
 "Geophysical Turbulance"
-<stime>4 pm</stime>, <location>3rd Floor Conference Room</location>
+<stime>4 pm</stime>, 3rd Floor Conference Room
 Mellon Institute Building
 -----------------
 

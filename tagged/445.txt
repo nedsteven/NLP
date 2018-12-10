@@ -18,5 +18,5 @@ Peter
 Oct 21
 "Biomechanics"
 George Lea, National Science Foundation
-Mellon Institute, <location>3rd Floor Conference Room</location>, <stime>4:00 p.m</stime>.
+Mellon Institute, 3rd Floor Conference Room, <stime>4:00 p.m</stime>.
 

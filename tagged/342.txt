@@ -11,7 +11,7 @@ Abstract:
                             James Driscoll
                               Dartmouth
                      Friday, December 6, <stime>3:30</stime>-<etime>5:00</etime>
-<paragraph>                       <location><location><location>Adamson Wing, Baker Hall</location></location></location>
+<paragraph>                       <location>Adamson Wing, Baker Hall</location>
 The FFT is an important engineering tool, but its applicability is not
 universal. <sentence>Its utility comes from simplifying operators with a
 translational symmetry (i.e</sentence>. linear translation invariant operators,

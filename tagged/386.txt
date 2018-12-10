@@ -12,7 +12,7 @@ Abstract:
 			   GRAPHICS SEMINAR
 		 Thursday, 12 Nov 92
 	    <stime>3:00</stime> reception, <stime>3:30</stime>-<etime>4:30</etime> talk
-		      <location><location>Wean 4623</location></location>
+		      <location>Wean 4623</location>
      Model-Based Kinematic Analysis of Mechanisms
 			     Elisha Sacks
 		     Computer Science Department

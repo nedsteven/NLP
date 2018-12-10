@@ -9,7 +9,7 @@ Abstract:
 HCI Seminar
 Feb 16
 <stime>3:30</stime>-<etime>5:00</etime>
-<location><location><location><location><location>WeH 5409</location></location></location></location></location>
+<location>WeH 5409</location>
 HOW TO FIX COMPUTERS
 Usefulness, usability and productivity.
 Tom Landauer

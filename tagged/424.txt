@@ -10,7 +10,7 @@ Abstract:
                                 PS SEMINAR
                           Monday, November 4, 1991
                               <stime>3:30PM</stime>-<etime>5:00PM</etime>
-                                 <location><location><location>WeH 5409</location></location></location>
+                                 <location>WeH 5409</location>
                        Nathaniel S. Borenstein
                                Bellcore
 <paragraph>                Moving Multimedia Mail into the Mainstream:  </paragraph>

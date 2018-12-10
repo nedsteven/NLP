@@ -12,7 +12,7 @@ Abstract:
 		          Charles Brooks
 	Chemistry Department, Carnegie Mellon University
 		     Feb 28, 1992    <stime>4:00 p.m</stime>.
-		<location>SEI Auditorium</location>
+		SEI Auditorium
 <paragraph><sentence>The anticipation of performing large-scale simulations to address crucial
 questions in the area of biomolecule structure and dynamics (for example
 protein folding, drug discovery, enzyme catalysis) is fueled by advances in

@@ -27,7 +27,7 @@ Mike Mantarro    A Parallel, Object-Oriented BioProcessor
 Nanci Miller     A Parallel, Object-Oriented BioProcessor
 Constantine Papageorgiou  Intelligent Singularity Avoidance in Telerobotics
 -- 
-Mark Stehlik				Assistant Dean for Undergrad Education
+Mark Stehlik				<speaker>Assistant Dean</speaker> for Undergrad Education
 School of Computer Science		(412) 268-3609 [office]
 Carnegie-Mellon University		(412) 681-5739 [fax]
 Pittsburgh, PA  15213			Internet: mjs@cs.cmu.edu

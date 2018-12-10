@@ -2,6 +2,7 @@ import re
 from os import listdir
 from os.path import isfile, join
 from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.stem.lancaster import LancasterStemmer
 from nltk import pos_tag
 
 contentMap  = {}
@@ -14,6 +15,7 @@ stimeMap = {}
 etimeMap = {}
 speakerMap = {}
 
+topics = []
 locations = []
 speakers = []
 
@@ -22,9 +24,8 @@ PLACE_ROW_REGEX = r'((where)|(place)|(location)):'
 SPEAKER_ROW_REGEX = r'((who)|(speaker)|(name)):'
 INFO_REGEX = r'\w:'
 time_regex = r'\b(?<!>)((0?[1-9]|1[012])([:][0-5][0-9])?(\s?[apAP]\.?[Mm])|([01]?[0-9]|2[0-3])([:][0-5][0-9]))\b'
-speaker_regex = r'((M[Rr])|(M[Ss])|(M[RrSs])|(D[rR])|(P[RrOoFf])|(Professor))(\.)? '
+speaker_regex = r'((M[Rr])|(M[Ss])|(M[RrSs])|(D[rR])|(P[RrOoFf])|(Professor)|(Assistant))(\.)? '
 
-punctuation = ['\.\?\!']
 separator = 'Abstract:'
 
 
@@ -57,7 +58,36 @@ def get_training_data():
         pfile.close()
 
 
-def read_files():
+def get_topics():
+    root_path = 'training/'
+    training_files = [f for f in listdir(root_path) if isfile(join(root_path, f))]
+
+    for f in training_files:
+        path = root_path + f
+        with open(path, 'r') as file:
+            content = file.read()
+            topic = re.search(r'Topic:(.*?)\n', content)
+            if topic is not None:
+                topics.append(topic.group(1).strip().lower())
+
+
+def process_topics():
+    lancaster_stemmer = LancasterStemmer()
+    noun_freq = {}
+    for topic in topics:
+        tagged_words = pos_tag(word_tokenize(topic))
+        for word, part in tagged_words:
+            if part == 'NN' or part == 'NNS':
+                if word not in list(noun_freq.keys()):
+                    noun_freq[word] = 0
+                noun_freq[word] += 1
+    noun_list = [(k, v) for k, v in noun_freq.items()]
+    noun_list.sort(key=lambda x: x[1])
+    print(noun_list)
+
+
+
+def process_files():
     my_path = 'untagged/'
     result_path = 'tagged/'
     only_files = [f for f in listdir(my_path) if isfile(join(my_path, f))]
@@ -124,10 +154,7 @@ def tag_parag_and_sent(path):
                     else:
                         sents[i] = '<sentence>' + sents[i] + '</sentence>'
             new_block = '<paragraph>' + ' '.join(sents) + '</paragraph>' + '\n\n'
-            #print(new_block + '\n================ ' + str(block in contentMap[path]) + ' ============')
             new_content = ''.join([new_content, new_block])
-            #contentMap[path].replace(block, new_block)
-            #print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n' + contentMap[path] + '\n')
         else:
             new_content = new_content + block + '\r\n'
     return new_content
@@ -174,15 +201,17 @@ def tag_speaker(path):
 
 # Tag the location based on the training data offering examples
 def tag_location(path):
+    locationset = list(set(locations))
     match = re.search(PLACE_ROW_REGEX, contentMap[path].lower())
     if match is not None:
         location_row = contentMap[path][match.span()[0]:].split('\n')[0]
         location = location_row[(location_row.find(':') + 1):].strip()
-        locations.append(location)
+        if location not in locationset:
+            locationset.append(location)
         contentMap[path] = contentMap[path].replace(location, '<location>' + location + '</location>')
     else:
         found = []
-        for location in locations:
+        for location in locationset:
             if location in contentMap[path]:
                 found.append(location)
         found2 = found
@@ -215,8 +244,6 @@ def tag_time(path):
                 new_text = part1 + new_text[(current + start_index):(current + end_index)] + part2
             else:
                 postedby = re.search('PostedBy:(.*)\n', headerMap[path])
-                if postedby is not None:
-                    print(path + ' ' + str(time in postedby.group(1)))
                 if postedby is None or time not in postedby.group(1): 
                     part1 = new_text[:(current + start_index)] + '<stime>'
                     part2 = '</stime>' + new_text[(end_index + current):]
@@ -230,9 +257,7 @@ def tag_time(path):
 if __name__ == '__main__':
 
     get_training_data()
-    #path = 'untagged/301.txt'
-    read_files()
-    #with open('untagged/301.txt', 'r') as f:
-     #   contentMap[path] = f.read()
-    #print(contentMap[path])
+    process_files()
+    #get_topics()
+    #process_topics()
     

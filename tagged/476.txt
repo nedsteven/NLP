@@ -10,7 +10,7 @@ Abstract:
                        VISITING SPEAKER
                       Thursday, April 16
                             <stime>1 pm</stime>.
-                       <location><location>4623 Wean Hall</location></location>
+                       <location>4623 Wean Hall</location>
     "INTEGRATING SYNTAXES AND THEIR ASSOCIATED SEMANTICS"
                           David Wile
                              ISI

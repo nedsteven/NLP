@@ -10,7 +10,7 @@ Abstract:
 			      GRAPHICS SEMINAR
 			    Wednesday November 11
 		      Reception: <stime>2:40</stime>, Talk: <stime>3:00</stime>-<etime>4:00</etime>
-			  <location><location><location><location><location><location><location><location><location>Baker Hall, Adamson Wing</location></location></location></location></location></location></location></location></location>
+			  Baker Hall, <location>Adamson Wing</location>
 			  Computer Graphics Snacks
 			       Paul Haeberli
 		   Silicon Graphics Inc

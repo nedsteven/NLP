@@ -10,7 +10,7 @@ Abstract:
 Speaker:  <speaker>Maxine Eskenazi</speaker> - LIMSI/CNRS - ORSAY, FRANCE
 December 20, 1993
 <stime>1:30</stime> --- <etime>3:30</etime>
-<location><location>4623 Wean Hall</location></location>
+<location>4623 Wean Hall</location>
 <paragraph><sentence>Within the quest to understand, and eventually automatically account for,
 the inherent variability of the speech signal, and in line with the recent
 interest shown by the speech community for "spontaneous" speech, several
